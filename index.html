@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doorprize - Firebase Edition</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        margin: 10px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+      }
+
+      .nav-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .main-content {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .firebase-status {
+        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .pointing-alert {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .pointing-alert h4 {
+        margin-bottom: 10px;
+      }
+
+      .reload-notice {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section {
+        margin-bottom: 30px;
+      }
+
+      .section h3 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+      }
+
+      .input-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+      }
+
+      .input-group input {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        min-width: 200px;
+      }
+
+      .input-group input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+      }
+
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: #218838;
+        transform: translateY(-2px);
+      }
+
+      .btn:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .btn-refresh {
+        background: #17a2b8;
+        color: white;
+        margin-left: 10px;
+      }
+
+      .btn-refresh:hover {
+        background: #138496;
+        transform: translateY(-2px);
+      }
+
+      .list-container {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      .list-section {
+        flex: 1;
+        min-width: 300px;
+      }
+
+      .item-list {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        min-height: 200px;
+        border: 2px solid #e9ecef;
+      }
+
+      .item {
+        background: white;
+        padding: 10px 15px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .item:last-child {
+        margin-bottom: 0;
+      }
+
+      .remove-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+
+      .remove-btn:hover {
+        background: #c82333;
+      }
+
+      .winner-display {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        margin-top: 30px;
+        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+      }
+
+      .winner-display h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+      }
+
+      .winner-info {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .spinning {
+        animation: spin 0.1s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: scale(1.1);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+
+      .history {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px solid #e9ecef;
+      }
+
+      .history-item {
+        background: #f8f9fa;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 10px;
+        }
+
+        .list-container {
+          flex-direction: column;
+        }
+
+        .input-group {
+          flex-direction: column;
+        }
+
+        .input-group input {
+          min-width: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎁 Doorprize - Firebase Edition</h1>
+      </div>
+
+      <div class="main-content">
+        <!-- Firebase Status -->
+        <div class="firebase-status">
+          <strong>🔥 Database Status:</strong>
+          <span id="firebaseStatus">Connecting...</span>
+        </div>
+
+        <!-- Input Data Section -->
+        <div class="section">
+          <h3>📝 Input Data</h3>
+          <div class="input-group">
+            <input
+              type="text"
+              id="participantInput"
+              placeholder="Nama peserta"
+              onkeypress="handleEnter(event, 'participant')"
+            />
+            <button class="btn btn-primary" onclick="addParticipant()">
+              Tambah Peserta
+            </button>
+          </div>
+          <div class="input-group">
+            <input
+              type="text"
+              id="prizeInput"
+              placeholder="Nama hadiah"
+              onkeypress="handleEnter(event, 'prize')"
+            />
+            <button class="btn btn-primary" onclick="addPrize()">
+              Tambah Hadiah
+            </button>
+          </div>
+        </div>
+
+        <!-- Lists Section -->
+        <div class="list-container">
+          <div class="list-section">
+            <h3>👥 Daftar Peserta (<span id="participantCount">0</span>)</h3>
+            <div class="item-list" id="participantList"></div>
+            <button
+              class="btn btn-danger"
+              onclick="clearParticipants()"
+              style="margin-top: 10px; width: 100%"
+            >
+              Hapus Semua Peserta
+            </button>
+          </div>
+          <div class="list-section">
+            <h3>🎁 Daftar Hadiah (<span id="prizeCount">0</span>)</h3>
+            <div class="item-list" id="prizeList"></div>
+            <button
+              class="btn btn-danger"
+              onclick="clearPrizes()"
+              style="margin-top: 10px; width: 100%"
+            >
+              Hapus Semua Hadiah
+            </button>
+          </div>
+        </div>
+
+        <!-- Random Draw Section -->
+        <div class="section">
+          <h3>🎲 Undian</h3>
+
+          <button
+            class="btn btn-success"
+            onclick="drawRandom()"
+            id="drawButton"
+            style="font-size: 1.2rem; padding: 15px 30px"
+          >
+            🚀 Mulai Pengundian!
+          </button>
+          <button
+            class="btn btn-refresh"
+            onclick="refreshPage()"
+            id="refreshButton"
+            style="font-size: 1.2rem; padding: 15px 30px; display: none"
+          >
+            🔄 Refresh Halaman
+          </button>
+        </div>
+
+        <!-- Winner Display -->
+        <div id="winnerDisplay" class="winner-display" style="display: none">
+          <h2>🎉 Selamat!</h2>
+          <div class="winner-info">
+            <div id="winnerText"></div>
+          </div>
+          <div
+            id="drawType"
+            style="font-size: 1rem; margin-top: 10px; opacity: 0.8"
+          ></div>
+        </div>
+
+        <!-- History -->
+        <div class="history">
+          <h3>📊 Riwayat Pemenang</h3>
+          <div id="historyList">
+            <p style="color: #666; font-style: italic">Belum ada pemenang</p>
+          </div>
+          <button
+            class="btn btn-danger"
+            onclick="clearHistory()"
+            style="margin-top: 15px"
+          >
+            Hapus Riwayat
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Firebase Configuration
+      const FIREBASE_URL = "https://ibudewiundian-default-rtdb.firebaseio.com";
+
+      let participants = [];
+      let prizes = [];
+      let winners = [];
+      let adminPointings = [];
+      let isDrawing = false;
+      let isFirebaseConnected = false;
+      let lastPointingCount = 0;
+      let hasDrawnOnce = false;
+
+      // Initialize
+      window.onload = function () {
+        initFirebase();
+      };
+
+      // Firebase functions
+      async function initFirebase() {
+        try {
+          const response = await fetch(`${FIREBASE_URL}/.json`);
+          if (response.ok) {
+            isFirebaseConnected = true;
+            updateFirebaseStatus("Connected ✅");
+            await loadFromFirebase();
+            setupFirebaseListeners();
+          } else {
+            throw new Error("Connection failed");
+          }
+        } catch (error) {
+          isFirebaseConnected = false;
+          updateFirebaseStatus("Connection Failed ❌ (Using Local Storage)");
+          console.error("Firebase error:", error);
+          loadFromLocalStorage();
+        }
+      }
+
+      function updateFirebaseStatus(status) {
+        document.getElementById("firebaseStatus").textContent = status;
+      }
+
+      async function saveToFirebase(path, data) {
+        if (!isFirebaseConnected) return false;
+
+        try {
+          const response = await fetch(`${FIREBASE_URL}/${path}.json`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+          return response.ok;
+        } catch (error) {
+          console.error("Save error:", error);
+          return false;
+        }
+      }
+
+      async function loadFromFirebase() {
+        if (!isFirebaseConnected) return;
+
+        try {
+          // Load participants
+          const participantsRes = await fetch(
+            `${FIREBASE_URL}/participants.json`
+          );
+          if (participantsRes.ok) {
+            participants = (await participantsRes.json()) || [];
+          }
+
+          // Load prizes
+          const prizesRes = await fetch(`${FIREBASE_URL}/prizes.json`);
+          if (prizesRes.ok) {
+            prizes = (await prizesRes.json()) || [];
+          }
+
+          // Load winners
+          const winnersRes = await fetch(`${FIREBASE_URL}/winners.json`);
+          if (winnersRes.ok) {
+            winners = (await winnersRes.json()) || [];
+          }
+
+          // Load pointings
+          const pointingsRes = await fetch(`${FIREBASE_URL}/pointings.json`);
+          if (pointingsRes.ok) {
+            adminPointings = (await pointingsRes.json()) || [];
+            lastPointingCount = adminPointings.length;
+          }
+
+          updateUI();
+          checkPointings();
+        } catch (error) {
+          console.error("Load error:", error);
+        }
+      }
+
+      function setupFirebaseListeners() {
+        // Listen for pointings changes with auto-reload
+        try {
+          const pointingsSource = new EventSource(
+            `${FIREBASE_URL}/pointings.json`
+          );
+          pointingsSource.onmessage = function (event) {
+            if (event.data && event.data !== "null") {
+              const newPointings = JSON.parse(event.data) || [];
+
+              // Check if new pointing added
+              if (
+                newPointings.length > lastPointingCount &&
+                lastPointingCount > 0
+              ) {
+                showReloadNotice();
+                setTimeout(() => {
+                  location.reload();
+                }, 2000);
+              }
+
+              adminPointings = newPointings;
+              lastPointingCount = adminPointings.length;
+              checkPointings();
+            }
+          };
+          pointingsSource.onerror = function () {
+            console.log("EventSource connection error");
+          };
+        } catch (error) {
+          console.log("EventSource not supported");
+        }
+      }
+
+      function showReloadNotice() {
+        const notice = document.getElementById("reloadNotice");
+        notice.style.display = "block";
+      }
+
+      function loadFromLocalStorage() {
+        try {
+          const data = JSON.parse(
+            localStorage.getItem("doorprize_data") || "{}"
+          );
+          participants = data.participants || [];
+          prizes = data.prizes || [];
+          winners = data.winners || [];
+          adminPointings = JSON.parse(
+            localStorage.getItem("doorprize_pointings") || "[]"
+          );
+          lastPointingCount = adminPointings.length;
+          updateUI();
+          checkPointings();
+        } catch (e) {
+          participants = [];
+          prizes = [];
+          winners = [];
+          adminPointings = [];
+          updateUI();
+        }
+      }
+
+      function updateUI() {
+        updateParticipantList();
+        updatePrizeList();
+        updateHistory();
+      }
+
+      // Event handlers
+      function handleEnter(event, type) {
+        if (event.key === "Enter") {
+          if (type === "participant") {
+            addParticipant();
+          } else if (type === "prize") {
+            addPrize();
+          }
+        }
+      }
+
+      async function addParticipant() {
+        const input = document.getElementById("participantInput");
+        const name = input.value.trim();
+
+        if (name && !participants.includes(name)) {
+          participants.push(name);
+          input.value = "";
+
+          if (isFirebaseConnected) {
+            await saveToFirebase("participants", participants);
+          } else {
+            saveToLocalStorage();
+          }
+
+          updateParticipantList();
+        } else if (participants.includes(name)) {
+          alert("Peserta sudah ada!");
+        }
+      }
+
+      async function addPrize() {
+        const input = document.getElementById("prizeInput");
+        const prize = input.value.trim();
+
+        if (prize && !prizes.includes(prize)) {
+          prizes.push(prize);
+          input.value = "";
+
+          if (isFirebaseConnected) {
+            await saveToFirebase("prizes", prizes);
+          } else {
+            saveToLocalStorage();
+          }
+
+          updatePrizeList();
+        } else if (prizes.includes(prize)) {
+          alert("Hadiah sudah ada!");
+        }
+      }
+
+      async function removeParticipant(index) {
+        participants.splice(index, 1);
+
+        if (isFirebaseConnected) {
+          await saveToFirebase("participants", participants);
+        } else {
+          saveToLocalStorage();
+        }
+
+        updateParticipantList();
+      }
+
+      async function removePrize(index) {
+        prizes.splice(index, 1);
+
+        if (isFirebaseConnected) {
+          await saveToFirebase("prizes", prizes);
+        } else {
+          saveToLocalStorage();
+        }
+
+        updatePrizeList();
+      }
+
+      function updateParticipantList() {
+        const list = document.getElementById("participantList");
+        const count = document.getElementById("participantCount");
+
+        list.innerHTML = "";
+        count.textContent = participants.length;
+
+        participants.forEach((participant, index) => {
+          const item = document.createElement("div");
+          item.className = "item";
+          item.innerHTML = `
+                    <span>${participant}</span>
+                    <button class="remove-btn" onclick="removeParticipant(${index})">×</button>
+                `;
+          list.appendChild(item);
+        });
+      }
+
+      function updatePrizeList() {
+        const list = document.getElementById("prizeList");
+        const count = document.getElementById("prizeCount");
+
+        list.innerHTML = "";
+        count.textContent = prizes.length;
+
+        prizes.forEach((prize, index) => {
+          const item = document.createElement("div");
+          item.className = "item";
+          item.innerHTML = `
+                    <span>${prize}</span>
+                    <button class="remove-btn" onclick="removePrize(${index})">×</button>
+                `;
+          list.appendChild(item);
+        });
+      }
+
+      // Draw functions
+      function drawRandom() {
+        if (isDrawing) return;
+        isDrawing = true;
+        hasDrawnOnce = true;
+
+        const drawButton = document.getElementById("drawButton");
+        const refreshButton = document.getElementById("refreshButton");
+
+        drawButton.disabled = true;
+        drawButton.textContent = "⏳ Mengundi...";
+
+        if (adminPointings.length > 0) {
+          drawFromPointing();
+        } else {
+          drawRandomly();
+        }
+      }
+
+      async function drawFromPointing() {
+        if (adminPointings.length === 0) {
+          alert("Tidak ada pointing!");
+          resetDrawButton();
+          return;
+        }
+
+        const winnerDisplay = document.getElementById("winnerDisplay");
+        const winnerText = document.getElementById("winnerText");
+        const drawType = document.getElementById("drawType");
+
+        winnerDisplay.style.display = "block";
+        winnerText.classList.add("spinning");
+
+        const selectedPointing = adminPointings[0];
+        const winner = selectedPointing.participant;
+        const prize = selectedPointing.prize;
+
+        // Create combined array for spinning (all participants + all prizes)
+        const allParticipants = [...participants];
+        const allPrizes = [...prizes];
+
+        let counter = 0;
+        const spinInterval = setInterval(async () => {
+          // Show random from all data during spinning
+          const randomParticipant =
+            allParticipants[Math.floor(Math.random() * allParticipants.length)];
+          const randomPrize =
+            allPrizes[Math.floor(Math.random() * allPrizes.length)];
+          winnerText.innerHTML = `${randomParticipant}<br>mendapat<br>${randomPrize}`;
+          counter++;
+
+          if (counter > 20) {
+            clearInterval(spinInterval);
+            winnerText.classList.remove("spinning");
+
+            // Show final winner from pointing
+            winnerText.innerHTML = `${winner}<br>mendapat<br>${prize}`;
+            // drawType.innerHTML = `👆 Berdasarkan pointing admin`;
+
+            await addToHistory(winner, prize, "pointing");
+
+            // Remove winner and prize from main lists (PENTING!)
+            const participantIndex = participants.indexOf(winner);
+            const prizeIndex = prizes.indexOf(prize);
+
+            if (participantIndex !== -1) {
+              participants.splice(participantIndex, 1);
+            }
+            if (prizeIndex !== -1) {
+              prizes.splice(prizeIndex, 1);
+            }
+
+            // Update Firebase with new participant and prize lists
+            if (isFirebaseConnected) {
+              await saveToFirebase("participants", participants);
+              await saveToFirebase("prizes", prizes);
+            } else {
+              saveToLocalStorage();
+            }
+
+            // Update UI lists
+            updateParticipantList();
+            updatePrizeList();
+
+            // Remove used pointing
+            adminPointings.shift();
+            if (isFirebaseConnected) {
+              await saveToFirebase("pointings", adminPointings);
+            } else {
+              localStorage.setItem(
+                "doorprize_pointings",
+                JSON.stringify(adminPointings)
+              );
+            }
+
+            checkPointings();
+            showRefreshButton();
+          }
+        }, 100);
+      }
+
+      async function drawRandomly() {
+        if (participants.length === 0 || prizes.length === 0) {
+          alert("Tambahkan peserta dan hadiah dulu!");
+          resetDrawButton();
+          return;
+        }
+
+        const winnerDisplay = document.getElementById("winnerDisplay");
+        const winnerText = document.getElementById("winnerText");
+        const drawType = document.getElementById("drawType");
+
+        winnerDisplay.style.display = "block";
+        winnerText.classList.add("spinning");
+
+        let counter = 0;
+        const spinInterval = setInterval(async () => {
+          const randomParticipant =
+            participants[Math.floor(Math.random() * participants.length)];
+          const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
+          winnerText.innerHTML = `${randomParticipant}<br>mendapat<br>${randomPrize}`;
+          counter++;
+
+          if (counter > 20) {
+            clearInterval(spinInterval);
+            winnerText.classList.remove("spinning");
+
+            const winnerIndex = Math.floor(Math.random() * participants.length);
+            const prizeIndex = Math.floor(Math.random() * prizes.length);
+            const winner = participants[winnerIndex];
+            const prize = prizes[prizeIndex];
+
+            winnerText.innerHTML = `${winner}<br>mendapat<br>${prize}`;
+            // drawType.innerHTML = `🎲 Undian acak murni`;
+
+            await addToHistory(winner, prize, "random");
+
+            // Remove winner and prize
+            participants.splice(winnerIndex, 1);
+            prizes.splice(prizeIndex, 1);
+
+            if (isFirebaseConnected) {
+              await saveToFirebase("participants", participants);
+              await saveToFirebase("prizes", prizes);
+            } else {
+              saveToLocalStorage();
+            }
+
+            updateParticipantList();
+            updatePrizeList();
+            showRefreshButton();
+          }
+        }, 100);
+      }
+
+      function resetDrawButton() {
+        isDrawing = false;
+        const drawButton = document.getElementById("drawButton");
+        const refreshButton = document.getElementById("refreshButton");
+
+        drawButton.disabled = false;
+        drawButton.textContent = "🚀 Mulai Pengundian!";
+
+        // Update button text based on available data
+        if (adminPointings.length > 0) {
+          drawButton.textContent = `🎲 Mulai Pengundian! (Acak)`;
+        } else if (participants.length > 0 && prizes.length > 0) {
+          drawButton.textContent = "🎲 Mulai Pengundian! (Acak)";
+        } else {
+          drawButton.textContent = "⚠️ Tambah Data Dulu";
+          drawButton.disabled = true;
+        }
+
+        // Hide refresh button jika tidak diperlukan
+        refreshButton.style.display = "none";
+      }
+
+      function showRefreshButton() {
+        isDrawing = false;
+        const drawButton = document.getElementById("drawButton");
+        const refreshButton = document.getElementById("refreshButton");
+
+        // Reset draw button untuk undian selanjutnya
+        drawButton.disabled = false;
+        drawButton.textContent = "🚀 Mulai Pengundian!";
+
+        // Show refresh button sebagai opsi tambahan
+        refreshButton.style.display = "inline-block";
+
+        // Check if masih ada pointing atau peserta/hadiah untuk undian selanjutnya
+        if (
+          adminPointings.length > 0 ||
+          (participants.length > 0 && prizes.length > 0)
+        ) {
+          drawButton.style.display = "inline-block";
+          drawButton.textContent =
+            adminPointings.length > 0
+              ? `🎲 Undi Lagi (Acak)`
+              : "🎲 Undi Lagi (Acak)";
+        } else {
+          drawButton.style.display = "none";
+        }
+      }
+
+      function refreshPage() {
+        location.reload();
+      }
+
+      async function addToHistory(winner, prize, type) {
+        const timestamp = new Date().toLocaleString("id-ID");
+        const newWinner = { winner, prize, timestamp, type };
+
+        // Prevent duplicate
+        const isDuplicate = winners.some(
+          (w) =>
+            w.winner === winner &&
+            w.prize === prize &&
+            w.type === type &&
+            Math.abs(new Date(w.timestamp) - new Date(timestamp)) < 5000
+        );
+
+        if (!isDuplicate) {
+          winners.push(newWinner);
+
+          if (isFirebaseConnected) {
+            await saveToFirebase("winners", winners);
+          } else {
+            saveToLocalStorage();
+          }
+
+          updateHistory();
+        }
+      }
+
+      function updateHistory() {
+        const historyList = document.getElementById("historyList");
+
+        if (winners.length === 0) {
+          historyList.innerHTML =
+            '<p style="color: #666; font-style: italic;">Belum ada pemenang</p>';
+          return;
+        }
+
+        historyList.innerHTML = "";
+        winners.forEach((entry) => {
+          const item = document.createElement("div");
+          item.className = "history-item";
+          const typeIcon = entry.type === "random" ? "🎲" : "🎲";
+          const typeText = entry.type === "random" ? "Acak" : "Acak";
+          item.innerHTML = `
+                    ${typeIcon} <strong>${entry.winner}</strong> mendapat <strong>${entry.prize}</strong>
+                    <br><small style="color: #666;">${entry.timestamp} • ${typeText}</small>
+                `;
+          historyList.appendChild(item);
+        });
+      }
+
+      function checkPointings() {
+        const pointingAlert = document.getElementById("pointingAlert");
+        const pointingCountSpan = document.getElementById("pointingCount");
+        const drawButton = document.getElementById("drawButton");
+
+        if (adminPointings.length > 0) {
+          pointingAlert.style.display = "block";
+          pointingCountSpan.textContent = adminPointings.length;
+
+          // Update button text untuk menunjukkan pointing tersedia
+          if (!isDrawing) {
+            drawButton.textContent = `🎲 Mulai Pengundian! (Acak)`;
+            drawButton.disabled = false;
+          }
+        } else {
+          pointingAlert.style.display = "none";
+
+          // Update button text untuk undian acak
+          if (!isDrawing) {
+            if (participants.length > 0 && prizes.length > 0) {
+              drawButton.textContent = "🎲 Mulai Pengundian! (Acak)";
+              drawButton.disabled = false;
+            } else {
+              drawButton.textContent = "⚠️ Tambah Data Dulu";
+              drawButton.disabled = true;
+            }
+          }
+        }
+      }
+
+      async function clearParticipants() {
+        if (confirm("Hapus semua peserta?")) {
+          participants = [];
+
+          if (isFirebaseConnected) {
+            await saveToFirebase("participants", participants);
+          } else {
+            saveToLocalStorage();
+          }
+
+          updateParticipantList();
+        }
+      }
+
+      async function clearPrizes() {
+        if (confirm("Hapus semua hadiah?")) {
+          prizes = [];
+
+          if (isFirebaseConnected) {
+            await saveToFirebase("prizes", prizes);
+          } else {
+            saveToLocalStorage();
+          }
+
+          updatePrizeList();
+        }
+      }
+
+      async function clearHistory() {
+        if (confirm("Hapus riwayat?")) {
+          winners = [];
+
+          if (isFirebaseConnected) {
+            await saveToFirebase("winners", winners);
+          } else {
+            saveToLocalStorage();
+          }
+
+          updateHistory();
+        }
+      }
+
+      function saveToLocalStorage() {
+        const data = { participants, prizes, winners };
+        localStorage.setItem("doorprize_data", JSON.stringify(data));
+      }
+
+      // Initialize UI
+      updateUI();
+    </script>
+  </body>
+</html>

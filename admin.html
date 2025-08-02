@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doorprize Admin - Firebase Edition</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        min-height: 100vh;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-link {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        margin: 10px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+      }
+
+      .nav-link:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .main-content {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .firebase-status {
+        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .data-status {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .status-counts {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+      }
+
+      .count-item {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      .no-data-warning {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .section {
+        margin-bottom: 30px;
+      }
+
+      .section h3 {
+        color: #764ba2;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+      }
+
+      .data-preview {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+      }
+
+      .data-lists {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .data-list {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .data-list h5 {
+        color: #764ba2;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+      }
+
+      .data-items {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        max-height: 200px;
+        overflow-y: auto;
+        border: 2px solid #e9ecef;
+      }
+
+      .data-item {
+        padding: 8px;
+        margin-bottom: 5px;
+        background: #f8f9fa;
+        border-radius: 4px;
+        font-size: 0.9rem;
+      }
+
+      .data-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .pointing-form {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        border: 2px solid #e9ecef;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        background: white;
+      }
+
+      .form-group select:focus {
+        outline: none;
+        border-color: #764ba2;
+        box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+      }
+
+      .btn:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .batch-actions {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+      }
+
+      .batch-actions h4 {
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .batch-controls {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .batch-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .batch-btn:hover:not(:disabled) {
+        background: white;
+        color: #28a745;
+      }
+
+      .batch-btn:disabled {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: rgba(255, 255, 255, 0.5);
+        cursor: not-allowed;
+      }
+
+      .pointing-list {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        min-height: 300px;
+      }
+
+      .pointing-item {
+        background: white;
+        padding: 15px;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #764ba2;
+      }
+
+      .pointing-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .pointing-info {
+        flex: 1;
+      }
+
+      .pointing-info strong {
+        color: #764ba2;
+      }
+
+      .remove-pointing {
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+
+      .remove-pointing:hover {
+        background: #c82333;
+      }
+
+      .summary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        margin-top: 30px;
+      }
+
+      .summary h3 {
+        color: white;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .summary-stats {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .stat-item {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        display: block;
+      }
+
+      .refresh-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .refresh-btn:hover {
+        background: white;
+        color: #17a2b8;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 10px;
+        }
+
+        .status-counts,
+        .batch-controls,
+        .summary-stats,
+        .data-lists {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .pointing-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>👨‍💼 Doorprize Admin - Firebase</h1>
+        <p>Real-time pointing dengan Firebase Database</p>
+        <a href="index-firebase.html" class="nav-link"
+          >🏠 Kembali ke Halaman Utama</a
+        >
+      </div>
+
+      <div class="main-content">
+        <!-- Firebase Status -->
+        <div class="firebase-status">
+          <strong>🔥 Firebase Status:</strong>
+          <span id="firebaseStatus">Connecting...</span>
+        </div>
+
+        <!-- Data Status -->
+        <div class="data-status">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 15px;
+            "
+          >
+            <h3>📊 Status Data Real-time</h3>
+            <button class="refresh-btn" onclick="manualRefresh()">
+              🔄 Refresh
+            </button>
+          </div>
+          <div class="status-counts">
+            <div class="count-item">
+              👥 Peserta: <span id="availableParticipants">0</span>
+            </div>
+            <div class="count-item">
+              🎁 Hadiah: <span id="availablePrizes">0</span>
+            </div>
+            <div class="count-item">
+              ✅ Pointing: <span id="totalPointings">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Data Warning -->
+        <div id="noDataWarning" class="no-data-warning" style="display: none">
+          <h4>⚠️ Tidak Ada Data!</h4>
+          <p>
+            Silakan tambahkan peserta dan hadiah di
+            <strong>Halaman Utama</strong> terlebih dahulu.
+          </p>
+          <a
+            href="index-firebase.html"
+            style="color: white; text-decoration: underline"
+            >👉 Ke Halaman Utama</a
+          >
+        </div>
+
+        <!-- Data Preview -->
+        <div class="section">
+          <h3>👀 Preview Data Real-time</h3>
+          <div class="data-preview">
+            <div class="data-lists">
+              <div class="data-list">
+                <h5>👥 Peserta (<span id="participantCount">0</span>)</h5>
+                <div class="data-items" id="participantPreview">
+                  <div style="color: #666; font-style: italic">
+                    Tidak ada data
+                  </div>
+                </div>
+              </div>
+              <div class="data-list">
+                <h5>🎁 Hadiah (<span id="prizeCount">0</span>)</h5>
+                <div class="data-items" id="prizePreview">
+                  <div style="color: #666; font-style: italic">
+                    Tidak ada data
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Batch Actions -->
+        <div class="batch-actions">
+          <h4>🚀 Aksi Batch</h4>
+          <div class="batch-controls">
+            <button
+              class="batch-btn"
+              onclick="autoRandomPointing()"
+              id="autoRandomBtn"
+            >
+              🎲 Auto Random Pointing
+            </button>
+            <button class="batch-btn" onclick="clearAllPointings()">
+              🗑️ Hapus Semua Pointing
+            </button>
+            <button
+              class="batch-btn"
+              onclick="sendPointingsToIndex()"
+              id="sendPointingsBtn"
+            >
+              📤 Sync ke Index
+            </button>
+          </div>
+        </div>
+
+        <!-- Manual Pointing Form -->
+        <div class="section">
+          <h3>👆 Pointing Manual</h3>
+          <div class="pointing-form">
+            <div class="form-group">
+              <label for="participantSelect">Pilih Peserta:</label>
+              <select id="participantSelect">
+                <option value="">-- Pilih Peserta --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="prizeSelect">Pilih Hadiah:</label>
+              <select id="prizeSelect">
+                <option value="">-- Pilih Hadiah --</option>
+              </select>
+            </div>
+            <button
+              class="btn btn-primary"
+              onclick="addPointing()"
+              id="addPointingBtn"
+              disabled
+            >
+              ➕ Tambah Pointing
+            </button>
+          </div>
+        </div>
+
+        <!-- Pointing List -->
+        <div class="section">
+          <h3>📋 Daftar Pointing (<span id="pointingCount">0</span>)</h3>
+          <div class="pointing-list" id="pointingList">
+            <p style="color: #666; font-style: italic; text-align: center">
+              Belum ada pointing dibuat
+            </p>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+          <h3>📈 Ringkasan Real-time</h3>
+          <div class="summary-stats">
+            <div class="stat-item">
+              <span class="stat-number" id="totalParticipantsFromIndex">0</span>
+              <span>Total Peserta</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" id="totalPrizesFromIndex">0</span>
+              <span>Total Hadiah</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" id="createdPointings">0</span>
+              <span>Pointing Dibuat</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" id="remainingItems">0</span>
+              <span>Item Tersisa</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+  // Firebase Configuration
+  const FIREBASE_URL = "https://ibudewiundian-default-rtdb.firebaseio.com";
+
+  let indexParticipants = [];
+  let indexPrizes = [];
+  let pointings = [];
+  let isFirebaseConnected = false;
+  let isUserInteracting = false;
+
+  // Initialize
+  window.onload = function () {
+    initFirebase();
+  };
+
+  // Firebase functions
+  async function initFirebase() {
+    try {
+      const response = await fetch(`${FIREBASE_URL}/.json`);
+      if (response.ok) {
+        isFirebaseConnected = true;
+        updateFirebaseStatus("Connected ✅");
+        await loadFromFirebase();
+        setupFirebaseListeners();
+      } else {
+        throw new Error("Connection failed");
+      }
+    } catch (error) {
+      isFirebaseConnected = false;
+      updateFirebaseStatus("Connection Failed ❌ (Using Local Storage)");
+      console.error("Firebase error:", error);
+      loadFromLocalStorage();
+    }
+  }
+
+  function updateFirebaseStatus(status) {
+    document.getElementById("firebaseStatus").textContent = status;
+  }
+
+  async function saveToFirebase(path, data) {
+    if (!isFirebaseConnected) return false;
+
+    try {
+      const response = await fetch(`${FIREBASE_URL}/${path}.json`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error("Save error:", error);
+      return false;
+    }
+  }
+
+  async function loadFromFirebase() {
+    if (!isFirebaseConnected) return;
+
+    try {
+      // Load participants
+      const participantsRes = await fetch(`${FIREBASE_URL}/participants.json`);
+      if (participantsRes.ok) {
+        indexParticipants = (await participantsRes.json()) || [];
+      }
+
+      // Load prizes
+      const prizesRes = await fetch(`${FIREBASE_URL}/prizes.json`);
+      if (prizesRes.ok) {
+        indexPrizes = (await prizesRes.json()) || [];
+      }
+
+      // Load pointings
+      const pointingsRes = await fetch(`${FIREBASE_URL}/pointings.json`);
+      if (pointingsRes.ok) {
+        pointings = (await pointingsRes.json()) || [];
+      }
+
+      updateUI();
+    } catch (error) {
+      console.error("Load error:", error);
+    }
+  }
+
+  function setupFirebaseListeners() {
+    // Real-time listeners for participants
+    try {
+      const participantsSource = new EventSource(
+        `${FIREBASE_URL}/participants.json`
+      );
+      participantsSource.onmessage = function (event) {
+        if (event.data && event.data !== "null") {
+          indexParticipants = JSON.parse(event.data) || [];
+          updateDataPreview();
+          updateDropdowns();
+          updateStats();
+          checkDataAvailability();
+        }
+      };
+
+      // Real-time listeners for prizes
+      const prizesSource = new EventSource(`${FIREBASE_URL}/prizes.json`);
+      prizesSource.onmessage = function (event) {
+        if (event.data && event.data !== "null") {
+          indexPrizes = JSON.parse(event.data) || [];
+          updateDataPreview();
+          updateDropdowns();
+          updateStats();
+          checkDataAvailability();
+        }
+      };
+    } catch (error) {
+      console.log("EventSource not supported, using manual refresh");
+    }
+  }
+
+  function loadFromLocalStorage() {
+    try {
+      const data = JSON.parse(localStorage.getItem("doorprize_data") || "{}");
+      indexParticipants = data.participants || [];
+      indexPrizes = data.prizes || [];
+      pointings = JSON.parse(
+        localStorage.getItem("doorprize_pointings") || "[]"
+      );
+      updateUI();
+    } catch (e) {
+      indexParticipants = [];
+      indexPrizes = [];
+      pointings = [];
+      updateUI();
+    }
+  }
+
+  function updateUI() {
+    updateDataPreview();
+    updateDropdowns();
+    updateStats();
+    checkDataAvailability();
+    updatePointingList();
+  }
+
+  function manualRefresh() {
+    if (isFirebaseConnected) {
+      loadFromFirebase();
+    } else {
+      loadFromLocalStorage();
+    }
+  }
+
+  function checkDataAvailability() {
+    const noDataWarning = document.getElementById("noDataWarning");
+    const hasData = indexParticipants.length > 0 && indexPrizes.length > 0;
+
+    noDataWarning.style.display = hasData ? "none" : "block";
+
+    document.getElementById("autoRandomBtn").disabled = !hasData;
+    document.getElementById("sendPointingsBtn").disabled =
+      pointings.length === 0;
+  }
+
+  function updateDataPreview() {
+    const participantPreview = document.getElementById("participantPreview");
+    const prizePreview = document.getElementById("prizePreview");
+    const participantCount = document.getElementById("participantCount");
+    const prizeCount = document.getElementById("prizeCount");
+
+    participantCount.textContent = indexParticipants.length;
+    prizeCount.textContent = indexPrizes.length;
+
+    // Update participant preview
+    if (indexParticipants.length === 0) {
+      participantPreview.innerHTML =
+        '<div style="color: #666; font-style: italic;">Tidak ada data</div>';
+    } else {
+      participantPreview.innerHTML = "";
+      indexParticipants.forEach((participant) => {
+        const item = document.createElement("div");
+        item.className = "data-item";
+        item.textContent = participant;
+        participantPreview.appendChild(item);
+      });
+    }
+
+    // Update prize preview
+    if (indexPrizes.length === 0) {
+      prizePreview.innerHTML =
+        '<div style="color: #666; font-style: italic;">Tidak ada data</div>';
+    } else {
+      prizePreview.innerHTML = "";
+      indexPrizes.forEach((prize) => {
+        const item = document.createElement("div");
+        item.className = "data-item";
+        item.textContent = prize;
+        prizePreview.appendChild(item);
+      });
+    }
+  }
+
+  function updateDropdowns() {
+    // Don't update if user is selecting
+    if (isUserInteracting) return;
+
+    const participantSelect = document.getElementById("participantSelect");
+    const prizeSelect = document.getElementById("prizeSelect");
+
+    // Store current selections
+    const currentParticipant = participantSelect.value;
+    const currentPrize = prizeSelect.value;
+
+    // Get already pointed items
+    const pointedParticipants = pointings.map((p) => p.participant);
+    const pointedPrizes = pointings.map((p) => p.prize);
+
+    // Update participant dropdown
+    participantSelect.innerHTML =
+      '<option value="">-- Pilih Peserta --</option>';
+    indexParticipants.forEach((participant) => {
+      if (!pointedParticipants.includes(participant)) {
+        const option = document.createElement("option");
+        option.value = participant;
+        option.textContent = participant;
+        if (participant === currentParticipant) {
+          option.selected = true;
+        }
+        participantSelect.appendChild(option);
+      }
+    });
+
+    // Update prize dropdown
+    prizeSelect.innerHTML = '<option value="">-- Pilih Hadiah --</option>';
+    indexPrizes.forEach((prize) => {
+      if (!pointedPrizes.includes(prize)) {
+        const option = document.createElement("option");
+        option.value = prize;
+        option.textContent = prize;
+        if (prize === currentPrize) {
+          option.selected = true;
+        }
+        prizeSelect.appendChild(option);
+      }
+    });
+
+    // Setup interaction tracking
+    setupDropdownInteractionTracking();
+
+    // Add event listeners
+    participantSelect.onchange = checkForm;
+    prizeSelect.onchange = checkForm;
+
+    checkForm();
+  }
+
+  function setupDropdownInteractionTracking() {
+    const participantSelect = document.getElementById("participantSelect");
+    const prizeSelect = document.getElementById("prizeSelect");
+
+    if (!participantSelect.hasAttribute("data-tracked")) {
+      [participantSelect, prizeSelect].forEach((select) => {
+        select.addEventListener("focus", () => {
+          isUserInteracting = true;
+        });
+
+        select.addEventListener("blur", () => {
+          setTimeout(() => {
+            isUserInteracting = false;
+          }, 1000);
+        });
+
+        select.addEventListener("change", () => {
+          isUserInteracting = false;
+        });
+      });
+
+      participantSelect.setAttribute("data-tracked", "true");
+      prizeSelect.setAttribute("data-tracked", "true");
+    }
+  }
+
+  function checkForm() {
+    const participantSelect = document.getElementById("participantSelect");
+    const prizeSelect = document.getElementById("prizeSelect");
+    const addBtn = document.getElementById("addPointingBtn");
+
+    const canAdd = participantSelect.value !== "" && prizeSelect.value !== "";
+    addBtn.disabled = !canAdd;
+  }
+
+  async function addPointing() {
+    const participantSelect = document.getElementById("participantSelect");
+    const prizeSelect = document.getElementById("prizeSelect");
+
+    const participant = participantSelect.value;
+    const prize = prizeSelect.value;
+
+    if (participant && prize) {
+      pointings.push({
+        participant: participant,
+        prize: prize,
+        timestamp: new Date().toLocaleString("id-ID"),
+      });
+
+      if (isFirebaseConnected) {
+        await saveToFirebase("pointings", pointings);
+      } else {
+        localStorage.setItem("doorprize_pointings", JSON.stringify(pointings));
+      }
+
+      // Reset form
+      participantSelect.value = "";
+      prizeSelect.value = "";
+      isUserInteracting = false;
+
+      updatePointingList();
+      updateDropdowns();
+      updateStats();
+      checkDataAvailability();
+    }
+  }
+
+  async function removePointing(index) {
+    pointings.splice(index, 1);
+
+    if (isFirebaseConnected) {
+      await saveToFirebase("pointings", pointings);
+    } else {
+      localStorage.setItem("doorprize_pointings", JSON.stringify(pointings));
+    }
+
+    isUserInteracting = false;
+    updatePointingList();
+    updateDropdowns();
+    updateStats();
+    checkDataAvailability();
+  }
+
+  function updatePointingList() {
+    const list = document.getElementById("pointingList");
+    const count = document.getElementById("pointingCount");
+
+    count.textContent = pointings.length;
+
+    if (pointings.length === 0) {
+      list.innerHTML =
+        '<p style="color: #666; font-style: italic; text-align: center;">Belum ada pointing dibuat</p>';
+      return;
+    }
+
+    list.innerHTML = "";
+    pointings.forEach((pointing, index) => {
+      const item = document.createElement("div");
+      item.className = "pointing-item";
+      item.innerHTML = `
+            <div class="pointing-info">
+                <strong>${pointing.participant}</strong> → <strong>${pointing.prize}</strong>
+                <br><small style="color: #666;">${pointing.timestamp}</small>
+            </div>
+            <button class="remove-pointing" onclick="removePointing(${index})">×</button>
+        `;
+      list.appendChild(item);
+    });
+  }
+
+  async function autoRandomPointing() {
+    if (indexParticipants.length === 0 || indexPrizes.length === 0) {
+      alert("Tidak ada data peserta atau hadiah!");
+      return;
+    }
+
+    if (
+      confirm(
+        "Buat pointing acak untuk semua peserta dan hadiah yang tersedia?"
+      )
+    ) {
+      // Get available items
+      const pointedParticipants = pointings.map((p) => p.participant);
+      const pointedPrizes = pointings.map((p) => p.prize);
+
+      const availableParticipants = indexParticipants.filter(
+        (p) => !pointedParticipants.includes(p)
+      );
+      const availablePrizes = indexPrizes.filter(
+        (p) => !pointedPrizes.includes(p)
+      );
+
+      const minLength = Math.min(
+        availableParticipants.length,
+        availablePrizes.length
+      );
+
+      if (minLength === 0) {
+        alert("Tidak ada peserta atau hadiah yang tersedia!");
+        return;
+      }
+
+      // Shuffle arrays
+      const shuffledParticipants = [...availableParticipants].sort(
+        () => Math.random() - 0.5
+      );
+      const shuffledPrizes = [...availablePrizes].sort(
+        () => Math.random() - 0.5
+      );
+
+      // Create pointings
+      for (let i = 0; i < minLength; i++) {
+        pointings.push({
+          participant: shuffledParticipants[i],
+          prize: shuffledPrizes[i],
+          timestamp: new Date().toLocaleString("id-ID"),
+        });
+      }
+
+      if (isFirebaseConnected) {
+        await saveToFirebase("pointings", pointings);
+      } else {
+        localStorage.setItem("doorprize_pointings", JSON.stringify(pointings));
+      }
+
+      updatePointingList();
+      updateDropdowns();
+      updateStats();
+      checkDataAvailability();
+
+      alert(`${minLength} pointing acak berhasil dibuat!`);
+    }
+  }
+
+  async function clearAllPointings() {
+    if (confirm("Hapus semua pointing?")) {
+      pointings = [];
+
+      if (isFirebaseConnected) {
+        await saveToFirebase("pointings", pointings);
+      } else {
+        localStorage.setItem("doorprize_pointings", JSON.stringify(pointings));
+      }
+
+      updatePointingList();
+      updateDropdowns();
+      updateStats();
+      checkDataAvailability();
+    }
+  }
+
+  async function sendPointingsToIndex() {
+    if (pointings.length === 0) {
+      alert("Tidak ada pointing untuk dikirim!");
+      return;
+    }
+
+    if (
+      confirm(
+        `Kirim ${pointings.length} pointing ke halaman index untuk diundian?`
+      )
+    ) {
+      // Data sudah tersimpan di Firebase secara real-time
+      if (isFirebaseConnected) {
+        alert(
+          "Pointing sudah tersinkron real-time! Sekarang bisa diundian di halaman utama."
+        );
+      } else {
+        alert(
+          "Pointing berhasil dikirim! Sekarang bisa diundian di halaman utama."
+        );
+      }
+    }
+  }
+
+  function updateStats() {
+    const pointedParticipants = pointings.map((p) => p.participant);
+    const pointedPrizes = pointings.map((p) => p.prize);
+
+    const availableParticipants = indexParticipants.filter(
+      (p) => !pointedParticipants.includes(p)
+    ).length;
+    const availablePrizes = indexPrizes.filter(
+      (p) => !pointedPrizes.includes(p)
+    ).length;
+
+    // Update status
+    document.getElementById("availableParticipants").textContent =
+      availableParticipants;
+    document.getElementById("availablePrizes").textContent = availablePrizes;
+    document.getElementById("totalPointings").textContent = pointings.length;
+
+    // Update summary
+    document.getElementById("totalParticipantsFromIndex").textContent =
+      indexParticipants.length;
+    document.getElementById("totalPrizesFromIndex").textContent =
+      indexPrizes.length;
+    document.getElementById("createdPointings").textContent = pointings.length;
+    document.getElementById("remainingItems").textContent = Math.min(
+      availableParticipants,
+      availablePrizes
+    );
+  }
+
+  // Initialize
+  updateUI();
+</script>
