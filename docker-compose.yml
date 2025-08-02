@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  doorprize-app:
+    build: .
+    container_name: doorprize-firebase
+    ports:
+      - "8888:80"
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Jakarta
+    volumes:
+      - ./logs:/var/log/nginx
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.doorprize.rule=Host(`your-domain.com`)"
+      - "traefik.http.services.doorprize.loadbalancer.server.port=80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+# Optional: jika ingin menggunakan network khusus
+networks:
+  default:
+    driver: bridge

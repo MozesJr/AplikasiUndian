@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aplikasi Doorprize - Pilih Mode</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+      }
+
+      .container {
+        background: white;
+        padding: 50px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        max-width: 600px;
+        width: 90%;
+      }
+
+      .header {
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        color: #667eea;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        color: #666;
+      }
+
+      .app-selection {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 40px;
+      }
+
+      .app-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px 20px;
+        border-radius: 15px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        min-width: 200px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      }
+
+      .app-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+      }
+
+      .app-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+
+      .app-card p {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin-bottom: 15px;
+      }
+
+      .app-card .icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        display: block;
+      }
+
+      .firebase-card {
+        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+      }
+
+      .firebase-card:hover {
+        box-shadow: 0 20px 40px rgba(255, 152, 0, 0.4);
+      }
+
+      .info-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 30px;
+      }
+
+      .info-section h4 {
+        color: #667eea;
+        margin-bottom: 15px;
+      }
+
+      .feature-list {
+        text-align: left;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .feature-list li {
+        margin-bottom: 8px;
+        color: #666;
+      }
+
+      .version-info {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: #1976d2;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 30px 20px;
+        }
+
+        .app-selection {
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .app-card {
+          min-width: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎁 Aplikasi Doorprize</h1>
+        <p>Pilih mode aplikasi yang ingin digunakan</p>
+      </div>
+
+      <div class="app-selection">
+        <a href="index.html" class="app-card">
+          <span class="icon">💾</span>
+          <h3>Mode Lokal</h3>
+          <p>Menggunakan localStorage</p>
+          <small>Cocok untuk penggunaan offline</small>
+        </a>
+
+        <a href="index-firebase.html" class="app-card firebase-card">
+          <span class="icon">🔥</span>
+          <h3>Mode Firebase</h3>
+          <p>Real-time database</p>
+          <small>Cocok untuk multi-device</small>
+        </a>
+      </div>
+
+      <div class="info-section">
+        <h4>🚀 Fitur Aplikasi</h4>
+        <ul class="feature-list">
+          <li>✅ Input peserta dan hadiah</li>
+          <li>✅ Undian acak dengan animasi</li>
+          <li>✅ Pointing manual dari admin</li>
+          <li>✅ Real-time sync (Firebase mode)</li>
+          <li>✅ Riwayat pemenang</li>
+          <li>✅ Responsive design</li>
+        </ul>
+      </div>
+
+      <div class="version-info">
+        <strong>🐳 Dockerized Version</strong><br />
+        Aplikasi ini berjalan di Docker container dengan Nginx<br />
+        Port: 8888 | Status: <span style="color: #4caf50">✅ Running</span>
+      </div>
+    </div>
+  </body>
+</html>
